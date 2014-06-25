@@ -29,8 +29,8 @@ currentYear = datetime.now().year
 start_date = '01/01/2010'                           # set the start datae
 end_date = '12/31/'+str(currentYear)                # set the end date
 offices = dc_campaign_finance_data.scraper.offices()    # get list of offices for all years
-# contributions_data = dc_campaign_finance_data.scraper.records_csv(start_date, end_date, 'con') # con = contributions
-# expenditures_data = dc_campaign_finance_data.scraper.records_csv(start_date, end_date, 'exp')  # exp = expenditures
+contributions_data = dc_campaign_finance_data.scraper.records_csv(start_date, end_date, 'con') # con = contributions
+expenditures_data = dc_campaign_finance_data.scraper.records_csv(start_date, end_date, 'exp')  # exp = expenditures
 
 
 ## In order to make the data more useful in our pivot tables, 
@@ -42,6 +42,9 @@ offices = dc_campaign_finance_data.scraper.offices()    # get list of offices fo
 print datetime.now(), 'loading contributions into pandas'
 filename = os.path.join(data_dir, 'contributions_2010_current.csv')
 contributions = pd.read_csv(filename, converters={'Amount': lambda x: float(x.replace('$', '').replace(',','').replace('(','').replace(')',''))})
+contributions['Zip'] = df['Zip'].astype('object')
+pd.contributions.to_csv(/data/)
+
 print datetime.now(), 'loading expenditures into pandas'
 filename = os.path.join(data_dir, 'expenditures_2010_current.csv')
 expenditures = pd.read_csv(filename, converters={'Amount': lambda x: float(x.replace('$', '').replace(',','').replace('(','').replace(')',''))})
