@@ -13,6 +13,7 @@ import pandas as pd
 import numpy as np
 import csv
 import os
+import StringIO
 import collections
 import json
 import requests
@@ -30,9 +31,13 @@ end_date = '12/31/' + str(currentYear)                # set the end date
 print datetime.now(), 'downloading offices'
 offices = dc_campaign_finance_data.scraper.offices()    # get list of offices for all years
 print datetime.now(), 'downloading contributions'
-contributions_data = dc_campaign_finance_data.scraper.records_csv(start_date, end_date, 'con')  # con = contributions
+contributions = pd.read_csv(StringIO.StringIO(dc_campaign_finance_data.scraper.records_csv(start_date, end_date, 'con')))  # con = contributions
+filename = os.path.join(data_dir, 'contributions.csv')
+contributions.to_csv(filename)
 print datetime.now(), 'downloading expenditures'
-expenditures_data = dc_campaign_finance_data.scraper.records_csv(start_date, end_date, 'exp')  # exp = expenditures
+expenditures = pd.read_csv(StringIO.StringIO(dc_campaign_finance_data.scraper.records_csv(start_date, end_date, 'exp')))  # con = contributions
+filename = os.path.join(data_dir, 'expenditures.csv')
+expenditures.to_csv(filename)
 print datetime.now(), 'downloading done!'
 
 
@@ -95,3 +100,5 @@ for year in range(2010, currentYear + 1):
             cyo_df = pd.DataFrame(cyo_table)
             filename = os.path.join(data_dir, str(year) + ' ' + office + '.json')
             cyo_df.to_json(path_or_buf=filename)
+
+print "ALL DONE!"
