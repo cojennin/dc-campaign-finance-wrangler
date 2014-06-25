@@ -28,14 +28,20 @@ if not os.path.exists(data_dir):
 currentYear = datetime.now().year
 start_date = '01/01/2010'                           # set the start datae
 end_date = '12/31/'+str(currentYear)                # set the end date
+print datetime.now(), 'Getting offices'
 offices = dc_campaign_finance_data.scraper.offices()    # get list of offices for all years
+print datetime.now(), 'Finished getting offices'
+print datetime.now(), 'Getting con'
 contributions_data = dc_campaign_finance_data.scraper.records_csv(start_date, end_date, 'con') # con = contributions
+print datetime.now(), 'Finished getting con'
+print datetime.now(), 'Getting exp'
 expenditures_data = dc_campaign_finance_data.scraper.records_csv(start_date, end_date, 'exp')  # exp = expenditures
+print datetime.now(), 'Finished getting exp'
 
 
-## In order to make the data more useful in our pivot tables, 
-## we need to add a columng that indicates for which office each candidate is running.  
-## These offices are matched with committee names by the OCF, so that's what we'll use. 
+## In order to make the data more useful in our pivot tables,
+## we need to add a columng that indicates for which office each candidate is running.
+## These offices are matched with committee names by the OCF, so that's what we'll use.
 
 ## Load data into pandas & convert dollars to float
 
