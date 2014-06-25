@@ -43,13 +43,11 @@ print datetime.now(), 'loading contributions into pandas'
 filename = os.path.join(data_dir, 'contributions_2010_current.csv')
 contributions = pd.read_csv(filename, converters={'Amount': lambda x: float(x.replace('$', '').replace(',','').replace('(','').replace(')',''))})
 contributions['Zip'] = contributions['Zip'].astype('object')
-filename = os.path.join(data_dir, filename)
 contributions.to_csv(filename)
 
 print datetime.now(), 'loading expenditures into pandas'
 filename = os.path.join(data_dir, 'expenditures_2010_current.csv')
 expenditures = pd.read_csv(filename, converters={'Amount': lambda x: float(x.replace('$', '').replace(',','').replace('(','').replace(')',''))})
-filename = os.path.join(data_dir, filename)
 expenditures.to_csv(filename)
 print datetime.now(), 'data loaded!'
 
