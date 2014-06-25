@@ -21,7 +21,7 @@ import requests_cache
 requests_cache.install_cache(allowable_methods=['GET', 'POST'], expire_after=60 * 60 * 6)
 
 
-# first we grab the data & put into local files for munging
+# download the data, put it into pandas, & save to  csv files for hand inspection & review
 data_dir = '../data'
 if not os.path.exists(data_dir):
     os.makedirs(data_dir)
@@ -31,33 +31,19 @@ end_date = '12/31/' + str(currentYear)                # set the end date
 print datetime.now(), 'downloading offices'
 offices = dc_campaign_finance_data.scraper.offices()    # get list of offices for all years
 print datetime.now(), 'downloading contributions'
-contributions = pd.read_csv(StringIO.StringIO(dc_campaign_finance_data.scraper.records_csv(start_date, end_date, 'con')))  # con = contributions
-filename = os.path.join(data_dir, 'contributions.csv')
+# Load data into pandas & convert dollars to float
+contributions = pd.read_csv(
+    StringIO.StringIO(dc_campaign_finance_data.scraper.records_csv(start_date, end_date, 'con')),
+    converters={'Amount': lambda x: float(x.replace('$', '').replace(',', '').replace('(', '').replace(')', ''))})  # con = contributions
+filename = os.path.join(data_dir, 'contributions_2010_current.csv')
 contributions.to_csv(filename)
 print datetime.now(), 'downloading expenditures'
-expenditures = pd.read_csv(StringIO.StringIO(dc_campaign_finance_data.scraper.records_csv(start_date, end_date, 'exp')))  # con = contributions
-filename = os.path.join(data_dir, 'expenditures.csv')
-expenditures.to_csv(filename)
-print datetime.now(), 'downloading done!'
-
-
-# In order to make the data more useful in our pivot tables,
-# we need to add a columng that indicates for which office each candidate is running.
-# These offices are matched with committee names by the OCF, so that's what we'll use.
-
 # Load data into pandas & convert dollars to float
-
-print datetime.now(), 'loading contributions into pandas'
-filename = os.path.join(data_dir, 'contributions_2010_current.csv')
-contributions = pd.read_csv(filename, converters={'Amount': lambda x: float(x.replace('$', '').replace(',', '').replace('(', '').replace(')', ''))})
-contributions['Zip'] = contributions['Zip'].astype('object')
-contributions.to_csv(filename)
-
-print datetime.now(), 'loading expenditures into pandas'
+expenditures = pd.read_csv(
+    StringIO.StringIO(dc_campaign_finance_data.scraper.records_csv(start_date, end_date, 'exp')),
+    converters={'Amount': lambda x: float(x.replace('$', '').replace(',', '').replace('(', '').replace(')', ''))})  # exp = expenditures
 filename = os.path.join(data_dir, 'expenditures_2010_current.csv')
-expenditures = pd.read_csv(filename, converters={'Amount': lambda x: float(x.replace('$', '').replace(',', '').replace('(', '').replace(')', ''))})
 expenditures.to_csv(filename)
-
 print datetime.now(), 'data loaded!'
 
 
