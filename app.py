@@ -17,20 +17,23 @@ import collections
 import json
 import requests
 import requests_cache
-requests_cache.install_cache()
+requests_cache.install_cache(allowable_methods = ['GET', 'POST'], expire_after = 60*60*6)
 
 
 # ## first we grab the data & put into local files for munging
-
 data_dir = '../data'
 if not os.path.exists(data_dir):
     os.makedirs(data_dir)
 currentYear = datetime.now().year
 start_date = '01/01/2010'                           # set the start datae
 end_date = '12/31/'+str(currentYear)                # set the end date
+print datetime.now(), 'downloading offices'
 offices = dc_campaign_finance_data.scraper.offices()    # get list of offices for all years
+print datetime.now(), 'downloading contributions'
 contributions_data = dc_campaign_finance_data.scraper.records_csv(start_date, end_date, 'con') # con = contributions
+print datetime.now(), 'downloading expenditures'
 expenditures_data = dc_campaign_finance_data.scraper.records_csv(start_date, end_date, 'exp')  # exp = expenditures
+print datetime.now(), 'downloading done!'
 
 
 ## In order to make the data more useful in our pivot tables, 
@@ -49,6 +52,7 @@ print datetime.now(), 'loading expenditures into pandas'
 filename = os.path.join(data_dir, 'expenditures_2010_current.csv')
 expenditures = pd.read_csv(filename, converters={'Amount': lambda x: float(x.replace('$', '').replace(',','').replace('(','').replace(')',''))})
 expenditures.to_csv(filename)
+
 print datetime.now(), 'data loaded!'
 
 
