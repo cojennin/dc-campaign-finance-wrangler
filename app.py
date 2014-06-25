@@ -60,24 +60,23 @@ print datetime.now(), 'data loaded!'
 
 json_out = {}
 for year in range(2010, currentYear + 1): 
+    print ' '
+    print datetime.now(), 'starting', year
     datetime.now(), 'generating dataframe of committees running for', year, 'offices:'
     offices_df = pd.DataFrame(columns=['Year', 'Office', 'Committee Name'])
     for office in offices: 
-        print datetime.now(), 'downloading list of committees running for', office
+        print year, 'downloading list of committees running for', office
         committee_list = dc_campaign_finance_data.scraper.committees(office, year)
         if len(committee_list) > 0: 
             for committee in committee_list: 
-                print datetime.now(), 'adding:', [year, office]
                 row = [{'Year': year, 'Office': office}]
                 offices_df = offices_df.append(row, ignore_index=True)
     offices_df = offices_df[['Year', 'Office']].drop_duplicates()
-    print offices_df
     output_json = collections.defaultdict(list)
     for _, row in offices_df.iterrows():
         row = row.values.tolist()
         year, office = row
         output_json[int(year)].append(office)
-    print(output_json)
     json_out.update(output_json)
 filename = os.path.join(data_dir, 'years and offices.json')
 with open(filename, 'w') as outfile:
