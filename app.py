@@ -58,6 +58,8 @@ print datetime.now(), 'data loaded!'
 
 # push the data into a few json files
 
+
+
 json_out = {}
 for year in range(2010, currentYear + 1): 
     print ' '
