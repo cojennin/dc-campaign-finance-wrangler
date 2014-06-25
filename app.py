@@ -22,7 +22,7 @@ requests_cache.install_cache()
 
 # ## first we grab the data & put into local files for munging
 
-data_dir = 'data'
+data_dir = '../data'
 if not os.path.exists(data_dir):
     os.makedirs(data_dir)
 currentYear = datetime.now().year
@@ -42,12 +42,15 @@ expenditures_data = dc_campaign_finance_data.scraper.records_csv(start_date, end
 print datetime.now(), 'loading contributions into pandas'
 filename = os.path.join(data_dir, 'contributions_2010_current.csv')
 contributions = pd.read_csv(filename, converters={'Amount': lambda x: float(x.replace('$', '').replace(',','').replace('(','').replace(')',''))})
-contributions['Zip'] = df['Zip'].astype('object')
-pd.contributions.to_csv(/data/)
+contributions['Zip'] = contributions['Zip'].astype('object')
+filename = os.path.join(data_dir, filename)
+contributions.to_csv(filename)
 
 print datetime.now(), 'loading expenditures into pandas'
 filename = os.path.join(data_dir, 'expenditures_2010_current.csv')
 expenditures = pd.read_csv(filename, converters={'Amount': lambda x: float(x.replace('$', '').replace(',','').replace('(','').replace(')',''))})
+filename = os.path.join(data_dir, filename)
+expenditures.to_csv(filename)
 print datetime.now(), 'data loaded!'
 
 
