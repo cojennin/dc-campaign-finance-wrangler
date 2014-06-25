@@ -1,13 +1,13 @@
-# This file does two things.  
+# This file does two things.
 # First, it downloads data from the DC Office of Campaign Finance
-# using Saul Shanabrook's awesome dc_campaign_finance_data package. 
-# Second, it imports that data into pandas and generates various 
-# data tables suitable for graphing.   
+# using Saul Shanabrook's awesome dc_campaign_finance_data package.
+# Second, it imports that data into pandas and generates various
+# data tables suitable for graphing.
 #
 # For development purposes, there is verbose progress printng that
-# will ultimately be pushed to a log file instead. 
+# will ultimately be pushed to a log file instead.
 
-from datetime import datetime 
+from datetime import datetime
 import dc_campaign_finance_data.scraper
 import pandas as pd
 import numpy as np
@@ -17,17 +17,17 @@ import collections
 import json
 import requests
 import requests_cache
-requests_cache.install_cache()
+requests_cache.install_cache(allowable_methods = ['GET', 'POST'], expire_after = 60*60*6)
 
 
 # ## first we grab the data & put into local files for munging
-
 data_dir = '../data'
 if not os.path.exists(data_dir):
     os.makedirs(data_dir)
 currentYear = datetime.now().year
 start_date = '01/01/2010'                           # set the start datae
 end_date = '12/31/'+str(currentYear)                # set the end date
+
 print datetime.now(), 'Getting offices'
 offices = dc_campaign_finance_data.scraper.offices()    # get list of offices for all years
 print datetime.now(), 'Finished getting offices'
@@ -55,20 +55,21 @@ print datetime.now(), 'loading expenditures into pandas'
 filename = os.path.join(data_dir, 'expenditures_2010_current.csv')
 expenditures = pd.read_csv(filename, converters={'Amount': lambda x: float(x.replace('$', '').replace(',','').replace('(','').replace(')',''))})
 expenditures.to_csv(filename)
+
 print datetime.now(), 'data loaded!'
 
 
 # push the data into a few json files
 
 json_out = {}
-for year in range(2010, currentYear + 1): 
+for year in range(2010, currentYear + 1):
     datetime.now(), 'generating dataframe of committees running for', year, 'offices:'
     offices_df = pd.DataFrame(columns=['Year', 'Office', 'Committee Name'])
-    for office in offices: 
+    for office in offices:
         print datetime.now(), 'downloading list of committees running for', office
         committee_list = dc_campaign_finance_data.scraper.committees(office, year)
-        if len(committee_list) > 0: 
-            for committee in committee_list: 
+        if len(committee_list) > 0:
+            for committee in committee_list:
                 print datetime.now(), 'adding:', [year, office]
                 row = [{'Year': year, 'Office': office}]
                 offices_df = offices_df.append(row, ignore_index=True)
@@ -87,17 +88,17 @@ with open(filename, 'w') as outfile:
 
 ## Next we need to generate json files containing annual contributions and expenditures by year by office by candidate
 
-for year in range(2010, currentYear + 1): 
+for year in range(2010, currentYear + 1):
     print year
     datetime.now(), 'generating dataframe of committees running for', year, 'offices:'
     offices_df = pd.DataFrame(columns=['Committee Name', 'Office'])
     filename = os.path.join(data_dir, 'merged_' + str(year) + '_contributions.csv')
     merged = pd.read_csv(filename)
-    for office in offices: 
+    for office in offices:
         print datetime.now(), 'downloading list of committees running for', office
         committee_list = dc_campaign_finance_data.scraper.committees(office, year)
-        if len(committee_list) > 0: 
-            cyo = merged[ merged['Office'] == office ] 
+        if len(committee_list) > 0:
+            cyo = merged[ merged['Office'] == office ]
             cyo_table = pd.pivot_table(cyo, values='Amount', index=['Contributor Type'], columns=['Committee Name'], aggfunc=np.sum)
             cyo_df = pd.DataFrame(cyo_table)
             filename = os.path.join(data_dir, str(year) + ' ' + office + '.json')
