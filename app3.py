@@ -32,13 +32,16 @@ end_date = datetime.date.today().strftime("%m/%d/%Y")                # set the e
 current_year = np.int(datetime.date.today().strftime("%Y"))  # get the current year
 
 filename = os.path.join(data_dir, 'all_contributions_1999_current.csv')  # name of the file for conttributions
-contributions = pd.read_csv(io.StringIO(dc_campaign_finance_data.scraper.records_csv(start_date, end_date, 'con')), parse_dates=True)  # con = contributions
+c_in = dc_campaign_finance_data.scraper.records_csv(start_date, end_date, 'con') # con = contributions
+contributions = pd.read_csv(io.StringIO(c_in), parse_dates=True)
 contributions.to_csv(filename, index=False)
 
 filename = os.path.join(data_dir, 'all_expenditures_1999_current.csv')
-expenditures = pd.read_csv(io.StringIO(dc_campaign_finance_data.scraper.records_csv(start_date, end_date, 'exp')), parse_dates=True)  # exp = expenditures
+e_in = dc_campaign_finance_data.scraper.records_csv(start_date, end_date, 'exp')
+expenditures = pd.read_csv(io.StringIO(e_in), parse_dates=True)  # exp = expenditures
 expenditures.to_csv(filename, index=False)
 
+filename = os.path.join(data_dir, 'all_offices.csv')
 offices = dc_campaign_finance_data.scraper.offices()   # download a list of all offices
 # offices = [o.replace('\r\n', '') for o in offices]  # push them into a pickle
 with open(filename, 'wb') as f:
@@ -68,7 +71,6 @@ for election_year in range(2010, current_year + 1):   # we start at 2010 bc that
     if ((election_year == current_year) or not os.path.isfile(filename)):  # if it's the current year or the file doesn't already exist
         offices_df = pd.DataFrame(columns = ['Election Year', 'Office', 'Committee Name'])  # create a new pandas dataframe
         for office in offices:   # cycle through all the offices
-            print(office, election_year)
             committee_list = dc_campaign_finance_data.scraper.committees(office, election_year)  # download the committees for that office
             if len(committee_list) > 0:  #  check to see if there are committees to tell us if that office is up for election this year
                 for committee in committee_list:  # if so, cycle through the committees
@@ -112,7 +114,7 @@ for election_year in range(2010, current_year + 1):
         committee_list = offices_this_election[offices_this_election['Office'] == office]
         if len(committee_list) > 0:
             cyo = merged[merged['Office'] == office]
-            cyo_table = pd.pivot_table(cyo, values='Amount', index=['Contributor Type'], columns=['Committee Name'], aggfunc=np.sum)
+            cyo_table = pd.pivot_table(cyo, values='Amount', index=['Contributor Type'], columns=['Candidate Name'], aggfunc=np.sum)
             cyo_df = pd.DataFrame(cyo_table)
             filename = os.path.join(data_dir, str(election_year) + ' ' + office + '.json')
             cyo_df.to_json(path_or_buf=filename)
