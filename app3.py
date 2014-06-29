@@ -41,7 +41,7 @@ e_in = dc_campaign_finance_data.scraper.records_csv(start_date, end_date, 'exp')
 expenditures = pd.read_csv(io.StringIO(e_in), parse_dates=True)  # exp = expenditures
 expenditures.to_csv(filename, index=False)
 
-filename = os.path.join(data_dir, 'all_offices.csv')
+filename = os.path.join(data_dir, 'all_offices.pkl')
 offices = dc_campaign_finance_data.scraper.offices()   # download a list of all offices
 # offices = [o.replace('\r\n', '') for o in offices]  # push them into a pickle
 with open(filename, 'wb') as f:
