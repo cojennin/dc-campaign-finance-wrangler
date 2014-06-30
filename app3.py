@@ -14,11 +14,14 @@ import pickle
 import collections
 import json
 
-'''setup up data directory'''
+'''setup up input directory'''
 
-data_dir = '../data'
-if not os.path.exists(data_dir):
-    os.makedirs(data_dir)
+input_dir = '../data/input'
+if not os.path.exists(input_dir):
+    os.makedirs(input_dir)
+output_dir = '../data/output'
+if not os.path.exists(output_dir):
+    os.makedirs(output_dir)
 
 '''
 DOWNLOAD CONTRIBUTIONS, EXPENDITURES, AND OFFICE DATA.
@@ -31,17 +34,17 @@ start_date = '01/01/1999'            # set the start datae
 end_date = datetime.date.today().strftime("%m/%d/%Y")                # set the end date
 current_year = np.int(datetime.date.today().strftime("%Y"))  # get the current year
 
-filename = os.path.join(data_dir, 'all_contributions_1999_current.csv')  # name of the file for conttributions
+filename = os.path.join(input_dir, 'all_contributions_1999_current.csv')  # name of the file for conttributions
 c_in = dc_campaign_finance_data.scraper.records_csv(start_date, end_date, 'con') # con = contributions
 contributions = pd.read_csv(io.StringIO(c_in), parse_dates=True)
 contributions.to_csv(filename, index=False)
 
-filename = os.path.join(data_dir, 'all_expenditures_1999_current.csv')
+filename = os.path.join(input_dir, 'all_expenditures_1999_current.csv')
 e_in = dc_campaign_finance_data.scraper.records_csv(start_date, end_date, 'exp')
 expenditures = pd.read_csv(io.StringIO(e_in), parse_dates=True)  # exp = expenditures
 expenditures.to_csv(filename, index=False)
 
-filename = os.path.join(data_dir, 'all_offices.pkl')
+filename = os.path.join(input_dir, 'all_offices.pkl')
 offices = dc_campaign_finance_data.scraper.offices()   # download a list of all offices
 # offices = [o.replace('\r\n', '') for o in offices]  # push them into a pickle
 with open(filename, 'wb') as f:
@@ -67,7 +70,7 @@ But it always downloads the current year.
 
 json_out = {}  # create a json set for election years and committes
 for election_year in range(2010, current_year + 1):   # we start at 2010 bc that's all we have committee -> office data for.
-    filename = os.path.join(data_dir, str(election_year) + '_offices.csv')  # build a filename for the csv file
+    filename = os.path.join(input_dir, str(election_year) + '_offices_and_committees.csv')  # build a filename for the csv file
     if ((election_year == current_year) or not os.path.isfile(filename)):  # if it's the current year or the file doesn't already exist
         offices_df = pd.DataFrame(columns = ['Election Year', 'Office', 'Committee Name'])  # create a new pandas dataframe
         for office in offices:   # cycle through all the offices
@@ -77,6 +80,7 @@ for election_year in range(2010, current_year + 1):   # we start at 2010 bc that
                     row = [{'Election Year': election_year, 'Office': office, 'Committee Name': committee}] # adding a row to the dataframe for each committee
                     offices_df = offices_df.append(row, ignore_index=True)
         offices_df = offices_df[['Election Year', 'Office', 'Committee Name']].drop_duplicates()  # drop duplicates from the dataframe
+        offices_df[['Election Year']] = offices_df[['Election Year']].astype(np.int16)
         offices_df.to_csv(filename, index=False)  # save to csv
     else:  # if it's a prior year AND the data has already been saved to csv in the data folder
         offices_df = pd.read_csv(filename)  # load the csv into a pandas dataframe
@@ -87,7 +91,7 @@ for election_year in range(2010, current_year + 1):   # we start at 2010 bc that
         election_year, office = row
         output_json[int(election_year)].append(office)
     json_out.update(output_json)
-filename = os.path.join(data_dir, 'election years and offices.json')  # save one election year's info to a json file
+filename = os.path.join(output_dir, 'election years and offices.json')  # save one all info to a json file
 with open(filename, 'w') as outfile:
     json.dump(json_out, outfile)
 
@@ -102,11 +106,9 @@ by mergine the contributions and expenditures data with year/office/committee da
 for election_year in range(2010, current_year + 1):
     con = contributions[['Candidate Name', 'Committee Name', 'Contributor Type', 'Date of Receipt']]
     con['Amount'] = contributions['Amount'].str.replace(',', '').str.replace('$', '').str.replace('(', '').str.replace(')', '').astype('float')
-    filename = os.path.join(data_dir, str(election_year) + '_offices.csv')
+    filename = os.path.join(input_dir, str(election_year) + '_offices_and_committees.csv')
     offices_df = pd.read_csv(filename)
     merged = pd.merge(con, offices_df)
-    filename = os.path.join(data_dir, 'merged_' + str(election_year) + '_contributions.csv')
-    merged.to_csv(filename, index = False)
     offices_this_election = offices_df[offices_df['Election Year'] == election_year]
     offices = offices_this_election[['Office']].drop_duplicates()
     offices_list = offices['Office'].tolist()
@@ -116,7 +118,7 @@ for election_year in range(2010, current_year + 1):
             cyo = merged[merged['Office'] == office]
             cyo_table = pd.pivot_table(cyo, values='Amount', index=['Contributor Type'], columns=['Candidate Name'], aggfunc=np.sum)
             cyo_df = pd.DataFrame(cyo_table)
-            filename = os.path.join(data_dir, str(election_year) + ' ' + office + '.json')
+            filename = os.path.join(output_dir, str(election_year) + ' ' + office + '.json')
             cyo_df.to_json(path_or_buf=filename)
 
 
