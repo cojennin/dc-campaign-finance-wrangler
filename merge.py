@@ -16,6 +16,16 @@ import numpy as np
 import pickle
 import collections
 import json
+import gzip
+
+
+def gzipper(in_filename, out_filename):
+    the_data = open(in_filename, "rb").read()
+    gzf = gzip.open(out_filename, "wb")
+    gzf.write(the_data)
+    gzf.close()
+    os.unlink(in_filename)
+
 
 input_dir = '../data/input'
 output_dir = '../data/output'
@@ -42,8 +52,10 @@ for rownum in range(0, len(yo.index)):
     data_out = merged[(merged['Election Year'] ==  year)]
     data_out = data_out[(data_out['Office'] ==  office)]
     data_out = data_out[['Candidate Name', 'Contributor', 'Address', 'city', 'state', 'Zip', 'Contribution Type', 'Amount', 'Date of Receipt']]
-    filename = os.path.join(output_dir, str(year) +' ' + str(office) + '.json')
-    data_out.to_json(filename, orient = 'records')
-    summary_out = pd.tools.pivot.pivot_table(data_out, values='Amount', index=['Contribution Type'], cols=['Candidate Name'], aggfunc=np.sum)
-    filename = os.path.join(output_dir, 'summary ' + str(year) +' ' + str(office) + '.json')
-    summary_out.to_json(filename)
+    json_filename = os.path.join(output_dir, str(year) +' ' + str(office) + '.json')
+    data_out.to_json(json_filename, orient = 'records')
+    gzip_filename = os.path.join(output_dir, str(year) +' ' + str(office) + '.gzip')
+    gzipper(json_filename, gzip_filename)
+    # summary_out = pd.tools.pivot.pivot_table(data_out, values='Amount', index=['Contribution Type'], cols=['Candidate Name'], aggfunc=np.sum)
+    # filename = os.path.join(output_dir, 'summary ' + str(year) +' ' + str(office) + '.json')
+    # summary_out.to_json(filename)
