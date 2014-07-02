@@ -1,6 +1,8 @@
-# This file downloads data from the DC Office of Campaign Finance
-# and generates various data tables suitable for graphing.
-# It uses @sshanabrook's awesome dc_campaign_finance_data package.
+'''
+GATHER COMMITTEE LISTS FOR EACH ELECTION YEAR AND OFFICE
+generate csv & json files with the open offices for each year
+this is a little annoying because it has to be downloaded for each year
+'''
 
 import os
 import time
@@ -13,7 +15,6 @@ import pickle
 import collections
 import json
 
-
 input_dir = '../data/input'
 output_dir = '../data/output'
 current_year = np.int(datetime.date.today().strftime("%Y"))  # get the current year
@@ -24,13 +25,6 @@ contributions = pd.read_csv(filename, parse_dates=True)
 filename = os.path.join(input_dir, 'all_offices.pkl')
 with open(filename, 'rb') as f:
     offices = pickle.load(f)
-
-
-'''
-GATHER COMMITTEE LISTS FOR EACH ELECTION YEAR AND OFFICE
-generate csv & json files with the open offices for each year
-this is a little annoying because it has to be downloaded for each year
-'''
 
 offices_df = pd.DataFrame(columns = ['Election Year', 'Office', 'Committee Name'])  # create a new pandas dataframe
 for election_year in range(2010, current_year + 1):   # we start at 2010 bc that's all we have committee -> office data for.
