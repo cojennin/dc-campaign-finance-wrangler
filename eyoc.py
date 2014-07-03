@@ -37,9 +37,14 @@ for election_year in range(2010, current_year + 1):   # we start at 2010 bc that
 
 offices_df = offices_df[['Election Year', 'Office', 'Committee Name']].drop_duplicates()  # drop any duplicates from the dataframe
 offices_df[['Election Year']] = offices_df[['Election Year']].astype(np.int16)  # make sure amount is a number
-
 filename = os.path.join(input_dir, 'election_years_offices_and_committees.csv')  # build a filename for the csv file
 offices_df.to_csv(filename, index=False)  # save to csv
 filename = os.path.join(output_dir, 'election_years_offices_and_committees.json')  # build a filename for the csv file
+offices_df.to_json(filename, orient='records')
+
+offices_df = offices_df[['Election Year', 'Office']].drop_duplicates()  # drop any duplicates from the dataframe
+filename = os.path.join(input_dir, 'election_years_and_offices.csv')  # build a filename for the csv file
+offices_df.to_csv(filename, index=False)  # save to csv
+filename = os.path.join(output_dir, 'election_years_and_offices.json')  # build a filename for the csv file
 offices_df.to_json(filename, orient='records')
 
