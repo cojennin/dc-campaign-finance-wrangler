@@ -42,6 +42,6 @@ for rownum in range(0, len(yo.index)):
     office = yo.iloc[rownum, 1]
     data_out = merged[(merged['Election Year'] ==  year)]
     data_out = data_out[(data_out['Office'] ==  office)]
-    data_out = data_out[['Candidate Name', 'Contributor', 'Address', 'city', 'state', 'Zip', 'Contribution Type', 'Amount', 'Date of Receipt']]
+    data_out = data_out[['Candidate Name', 'Contributor', 'Contributor Type', 'Address', 'city', 'state', 'Zip', 'Contribution Type', 'Amount', 'Date of Receipt']]
     json_filename = os.path.join(output_dir, str(year) +' ' + str(office) + '.json')
     data_out.to_json(json_filename, orient = 'records')
