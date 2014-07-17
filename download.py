@@ -6,7 +6,7 @@ import os
 import time
 import datetime
 import io
-import dc_campaign_finance_data.scraper
+import dc_campaign_finance_scraper
 import requests
 import pandas as pd
 import numpy as np
@@ -34,8 +34,8 @@ start_date = '01/01/1999'            # set the start datae
 end_date = datetime.date.today().strftime("%m/%d/%Y")                # set the end date
 
 filename = os.path.join(input_dir, 'all_contributions_1999_current.csv')  # name of the file for conttributions
-contributions = dc_campaign_finance_data.scraper.records_csv(start_date, end_date, 'con') # con = contributions
-contributions = pd.read_csv(io.StringIO(contributions), parse_dates=True)
+contributions = dc_campaign_finance_scraper.records_json() # con = contributions
+contributions = pd.read_json(io.StringIO(contributions), parse_dates=True)
 contributions['Amount'] = contributions['Amount'].str.replace(',', '').str.replace('$', '').str.replace('(', '').str.replace(')', '').astype('float')
 contributions.to_csv(filename, index=False)
 
