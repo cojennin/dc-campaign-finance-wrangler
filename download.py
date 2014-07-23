@@ -24,14 +24,14 @@ we download from 1999 on, just for storage and review.
 We should eventually enter in the offices data for 1999-2009.
 '''
 
-start_date = '01/01/1999'
+start_date = '01/01/2010'
 end_date = datetime.date.today().strftime("%m/%d/%Y")
 
-# contributions = scraper.records_with_office_and_election_year(from_date=start_date, to_date=end_date, report_type='con')
-# filename = os.path.join(input_dir, 'contributions.csv')
-# with open(filename, 'w') as f:
-#     f.write(contributions.csv)
-# f.close()
+contributions = scraper.records_with_office_and_election_year(from_date=start_date, to_date=end_date, report_type='con')
+filename = os.path.join(input_dir, 'contributions.csv')
+with open(filename, 'w') as f:
+    f.write(contributions.csv)
+f.close()
 
 expenditures = scraper.records_with_office_and_election_year(from_date=start_date, to_date=end_date, report_type='exp')
 filename = os.path.join(input_dir, 'expenditures.csv')
