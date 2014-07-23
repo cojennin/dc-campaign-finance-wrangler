@@ -8,7 +8,7 @@ import datetime
 import io
 from  dc_campaign_finance_scraper import scraper
 
-'''setup up input directory'''
+'''setup up input and output directories'''
 
 input_dir = '../data/input'
 if not os.path.exists(input_dir):
@@ -19,9 +19,9 @@ if not os.path.exists(output_dir):
 
 '''
 DOWNLOAD CONTRIBUTIONS AND EXPENDITURES DATA.
-Even though we only have offices from 2000 on,
-we download from 1999 on, just for storage and review.
-We should eventually enter in the offices data for 1999-2009.
+Even though we only have offices data from 2000 on,
+we download contribution and expenditure data from 1999 on for storage and review.
+We could eventually enter in the offices data for 1999-2009.
 '''
 
 start_date = '01/01/2010'
