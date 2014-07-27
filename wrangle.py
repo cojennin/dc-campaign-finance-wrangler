@@ -7,8 +7,13 @@ import io
 import pandas as pd
 import numpy as np
 
-input_dir = '../data/input'
-output_dir = '../data/output'
+try:
+    data_dir = sys.argv[0]
+except IndexError:
+    data_dir = '../data/'
+
+input_dir = data_dir +'input'
+output_dir = data_dir +'ouput'
 
 # read in data and clean up a bit
 filename = os.path.join(input_dir, 'contributions.csv')
