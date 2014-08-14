@@ -10,10 +10,10 @@ from  dc_campaign_finance_scraper import scraper
 
 '''setup up input and output directories'''
 
-input_dir = '../data/input'
+input_dir = '../dc-campaign-finance-data/csv'
 if not os.path.exists(input_dir):
     os.makedirs(input_dir)
-output_dir = '../data/output'
+output_dir = '../dc-campaign-finance-data/json'
 if not os.path.exists(output_dir):
     os.makedirs(output_dir)
 

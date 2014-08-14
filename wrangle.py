@@ -7,8 +7,8 @@ import io
 import pandas as pd
 import numpy as np
 
-input_dir = '../data/input'
-output_dir = '../data/output'
+input_dir = '../dc-campaign-finance-data/csv'
+output_dir = '../dc-campaign-finance-data/json'
 
 # read in data and clean up a bit
 filename = os.path.join(input_dir, 'contributions.csv')
