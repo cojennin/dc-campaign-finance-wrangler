@@ -29,14 +29,14 @@ yo.to_json(json_filename, orient = 'records')
 
 
 # json files for complex graphs
-for rownum in range(0, len(yo.index)):
-    year = yo.iloc[rownum, 0]
-    office = yo.iloc[rownum, 1]
-    data = contributions[(contributions['Election Year'] ==  year)]
-    data = data[(data['Office'] ==  office)]
-    data = data[['Candidate Name', 'Contributor', 'Contributor Type', 'Address', 'city', 'state', 'Zip', 'Contribution Type', 'Amount', 'Date of Receipt']]
-    json_filename = os.path.join(output_dir, str(year) +' ' + str(office) + '.json')
-    data.to_json(json_filename, orient = 'records')
+# for rownum in range(0, len(yo.index)):
+#     year = yo.iloc[rownum, 0]
+#     office = yo.iloc[rownum, 1]
+#     data = contributions[(contributions['Election Year'] ==  year)]
+#     data = data[(data['Office'] ==  office)]
+#     data = data[['Candidate Name', 'Contributor', 'Contributor Type', 'Address', 'city', 'state', 'Zip', 'Contribution Type', 'Amount', 'Date of Receipt']]
+#     json_filename = os.path.join(output_dir, str(year) +' ' + str(office) + '.json')
+#     data.to_json(json_filename, orient = 'records')
 
 
 # json files for grass-roots graphs
@@ -50,10 +50,10 @@ for rownum in range(0, len(yo.index)):
     data = data[(data['Office'] ==  office) & (data['state'] ==  'DC') & (data['Contributor Type'] == 'Individual')]
     data['unique'] = data['Contributor'] + data['Address']
     data = data[['Candidate Name', 'unique']].drop_duplicates()
-    data['mycount'] = 1
+    data['dcdonors'] = 1
     data = data.groupby(['Candidate Name']).sum()
-    data = data.sort(['mycount'],ascending=False).reset_index()
-    data = pd.DataFrame(data[['Candidate Name', 'mycount']])
+    data = data.sort(['dcdonors'],ascending=False).reset_index()
+    data = pd.DataFrame(data[['Candidate Name', 'dcdonors']])
     json_filename = os.path.join(output_dir, str(year) +' ' + str(office) + '.json')
     data.to_json(json_filename, orient = 'records')
 
@@ -69,10 +69,10 @@ for rownum in range(0, len(yo.index)):
     data = data[(data['Contributor Type'] == 'Corporation') | (data['Contributor Type'] == 'Corporate Sponsored PAC') | (data['Contributor Type'] == 'Business')]
     data['unique'] = data['Contributor'] + data['Address']
     data = data[['Candidate Name', 'unique']].drop_duplicates()
-    data['mycount'] = 1
+    data['corpcount'] = 1
     data = data.groupby(['Candidate Name']).sum()
-    data = data.sort(['mycount'],ascending=False).reset_index()
-    data = pd.DataFrame(data[['Candidate Name', 'mycount']])
+    data = data.sort(['corpcount'],ascending=False).reset_index()
+    data = pd.DataFrame(data[['Candidate Name', 'corpcount']])
     json_filename = os.path.join(output_dir, str(year) +' ' + str(office) + '.json')
     data.to_json(json_filename, orient = 'records')
 
