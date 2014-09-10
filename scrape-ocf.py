@@ -21,7 +21,7 @@ we download contribution and expenditure data from 1999 on for storage and revie
 We could eventually enter in the offices data for 1999-2009.
 '''
 
-start_date = '01/01/2010'
+start_date = '01/01/1990'
 end_date = datetime.date.today().strftime("%m/%d/%Y")
 
 contributions = scraper.records_with_office_and_election_year(from_date=start_date, to_date=end_date, report_type='con')
