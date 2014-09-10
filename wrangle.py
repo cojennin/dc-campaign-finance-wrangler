@@ -16,7 +16,7 @@ if not os.path.exists(output_dir):
 filename = os.path.join(input_dir, 'contributions.csv')
 contributions = pd.read_csv(filename)
 contributions['Amount'] = contributions['Amount'].str.replace(',', '').str.replace('$', '').str.replace('(', '').str.replace(')', '').astype('float')
-contributions = contributions[contributions['Election Year'] > 0]
+contributions = contributions[contributions['Election Year'] > 2009]
 contributions['Election Year'] = contributions['Election Year'].astype('int16')
 
 # make a list of offices for each election year
