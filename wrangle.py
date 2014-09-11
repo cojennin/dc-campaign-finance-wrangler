@@ -13,7 +13,7 @@ if not os.path.exists(output_dir):
     os.makedirs(output_dir)
 
 # read in data and clean up a bit
-filename = os.path.join(input_dir, 'contributions.csv')
+filename = os.path.join(input_dir, 'ocf_contributions.csv')
 contributions = pd.read_csv(filename)
 contributions['Amount'] = contributions['Amount'].str.replace(',', '').str.replace('$', '').str.replace('(', '').str.replace(')', '').astype('float')
 contributions = contributions[contributions['Election Year'] > 2009]

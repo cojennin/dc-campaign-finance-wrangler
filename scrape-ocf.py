@@ -25,13 +25,13 @@ start_date = '01/01/1990'
 end_date = datetime.date.today().strftime("%m/%d/%Y")
 
 contributions = scraper.records_with_office_and_election_year(from_date=start_date, to_date=end_date, report_type='con')
-filename = os.path.join(csv_dir, 'contributions.csv')
+filename = os.path.join(csv_dir, 'ocf_contributions.csv')
 with open(filename, 'w') as f:
     f.write(contributions.csv)
 f.close()
 
 expenditures = scraper.records_with_office_and_election_year(from_date=start_date, to_date=end_date, report_type='exp')
-filename = os.path.join(csv_dir, 'expenditures.csv')
+filename = os.path.join(csv_dir, 'ocf_expenditures.csv')
 with open(filename, 'w') as f:
     f.write(expenditures.csv)
 f.close()
