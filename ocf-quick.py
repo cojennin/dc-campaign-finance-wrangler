@@ -5,11 +5,11 @@ csv_dir = '../dc-campaign-finance-data/csv'
 if not os.path.exists(csv_dir):
     os.makedirs(csv_dir)
 
-filename = os.path.join(csv_dir, 'ocf_contributions.csv')
+filename = os.path.join(csv_dir, 'ocf_contributions_quick.csv')
 conurl = 'http://www.ocf.dc.gov/dsearch/printrpt_con.asp?ob1=agyname&type=pcc&searchtype=adv&printtype=csv'
 request.urlretrieve (conurl, filename)
 
-filename = os.path.join(csv_dir, 'ocf_expenditures.csv')
+filename = os.path.join(csv_dir, 'ocf_expenditures_quick.csv')
 expurl = 'http://www.ocf.dc.gov/dsearch/printrpt_exp.asp?ob1=agyname&type=pcc&searchtype=rec&printtype=csv'
 request.urlretrieve (expurl, filename)
 
