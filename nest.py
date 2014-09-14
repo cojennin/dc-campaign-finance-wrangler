@@ -8,7 +8,7 @@ import pandas as pd
 import numpy as np
 
 input_dir = '../dc-campaign-finance-data/csv'
-output_dir = '../dc-campaign-finance-data/json'
+output_dir = '../dc-campaign-finance-watch/json'
 if not os.path.exists(output_dir):
     os.makedirs(output_dir)
 
@@ -30,7 +30,7 @@ yo.to_json(json_filename, orient = 'records')
 
 
 # json files for grass-roots graphs
-output_dir = '../dc-campaign-finance-data/json/grass-roots'
+output_dir = '../dc-campaign-finance-watch/json/grass-roots'
 if not os.path.exists(output_dir):
     os.makedirs(output_dir)
 nested = ''
@@ -46,9 +46,12 @@ for rownum in range(0, len(yo.index)):
     data = data.sort(['DC Donors'],ascending=False).reset_index()
     data = data[['Candidate Name', 'DC Donors']]
     tpa = pd.np.array(data.transpose())
+    title = str(office) + ' (' + str(year) + ')'
+    subtitle = 'Grassroots Contributors'
+    yAxistitle = 'Number of DC Residents Contributing to Candidate'
     names = tpa[0].tolist()
     donors = tpa[1].tolist()
-    graphjson = '[' + str(names) + ',' + str(donors) + ']'
+    graphjson = '{ "categories": ' + str(names) + ', "series": ' + str(donors) + ', "title": "' +  title + '", "subtitle": "' + subtitle + '", "yAxistitle": "' + yAxistitle + '" }'
     graphjson = graphjson.replace("'", '"')
     json_filename = os.path.join(output_dir, str(year) +' ' + str(office) + '.json')
     with open(json_filename, 'w') as f:
@@ -72,7 +75,7 @@ for rownum in range(0, len(yo.index)):
 ]'''
     nested = nested + json_head + graphjson + json_tail
 
-output_dir = '../dc-campaign-finance-data/json'
+output_dir = '../dc-campaign-finance-watch/json'
 nested_filename = os.path.join(output_dir, 'grass-roots.json')
 with open(nested_filename, 'w') as f:
     f.write(nested)
@@ -81,7 +84,7 @@ f.close()
 
 
 # json files for corporate graphs
-output_dir = '../dc-campaign-finance-data/json/corporate'
+output_dir = '../dc-campaign-finance-watch/json/corporate'
 if not os.path.exists(output_dir):
     os.makedirs(output_dir)
 nested = ''
@@ -98,9 +101,10 @@ for rownum in range(0, len(yo.index)):
     data = data.sort(['Corporate Donors'],ascending=False).reset_index()
     data = data[['Candidate Name', 'Corporate Donors']]
     tpa = pd.np.array(data.transpose())
+    title = str(office) + ' (' + str(year) + ')'
     names = tpa[0].tolist()
     donors = tpa[1].tolist()
-    graphjson = '[' + str(names) + ',' + str(donors) + ']'
+    graphjson = '{ "categories": ' + str(names) + ', "series": ' + str(donors) + ', "title": "' +  title + '", "subtitle": "' + subtitle + '", "yAxistitle": "' + yAxistitle + '" }'
     graphjson = graphjson.replace("'", '"')
     json_filename = os.path.join(output_dir, str(year) +' ' + str(office) + '.json')
     with open(json_filename, 'w') as f:
@@ -123,7 +127,7 @@ for rownum in range(0, len(yo.index)):
 ]'''
     nested = nested + json_head + graphjson + json_tail
 
-output_dir = '../dc-campaign-finance-data/json'
+output_dir = '../dc-campaign-finance-watch/json'
 nested_filename = os.path.join(output_dir, 'corporate.json')
 with open(nested_filename, 'w') as f:
     f.write(nested)
