@@ -1,0 +1,5 @@
+aws:
+  s3:
+    aws_key_id:
+    aws_secret_key:
+    bucket_name: ofc-contributions

@@ -1,5 +1,3 @@
 .idea
-config.yml
-*.yml
 __pycache__
 *.pyc
