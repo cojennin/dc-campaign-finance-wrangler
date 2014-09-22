@@ -6,6 +6,12 @@ class SimpleBucket:
         #Sane defaults just in case.
         self.connection = boto.connect_s3(aws_access_key_id, aws_secret_access_key)
         self.bucket = self.connection.lookup(bucket_name)
+
+        #A stricter exception woud be nice.
+        if self.bucket is None:
+            self.bucket = self.connection.create_bucket(bucket_name)
+
+
         self.delim = delim
 
     def save(self, key_list, contents):
