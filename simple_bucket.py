@@ -11,7 +11,6 @@ class SimpleBucket:
         if self.bucket is None:
             self.bucket = self.connection.create_bucket(bucket_name)
 
-
         self.delim = delim
 
     def save(self, key_list, contents):
