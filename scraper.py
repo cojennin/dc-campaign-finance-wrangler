@@ -13,7 +13,7 @@ class Scraper:
                                    config['aws']['s3']['aws_secret_key'],
                                    config['aws']['s3']['bucket_name'])
 
-    def scrape_ocf_csv(self, years):
+    def scrape_ocf_csv_by_years(self, years):
         ocf_scraper = OCFScraper()
 
         for year in years:
