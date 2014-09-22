@@ -30,5 +30,6 @@ bucket = SimpleBucket(config['aws']['s3']['aws_key_id'],
 
 contributions = scraper.records_with_office_and_election_year(from_date=start_date, to_date=end_date, report_type='con')
 bucket.save([prefix, "ocf-contributions.csv"], contributions.csv)
+
 expenditures = scraper.records_with_office_and_election_year(from_date=start_date, to_date=end_date, report_type='exp')
 bucket.save([prefix, "ocf-expenditures.csv"], expenditures.csv)
