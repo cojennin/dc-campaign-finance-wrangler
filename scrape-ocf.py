@@ -28,12 +28,7 @@ bucket = SimpleBucket(config['aws']['s3']['aws_key_id'],
                       config['aws']['s3']['aws_secret_key'],
                       config['aws']['s3']['bucket_name'])
 
-print("Fetching contributions...")
 contributions = scraper.records_with_office_and_election_year(from_date=start_date, to_date=end_date, report_type='con')
-print(contributions.dict)
-print("Saving contributions...")
 bucket.save([prefix, "ocf-contributions.csv"], contributions.csv)
-print("Fetching expenditures...")
 expenditures = scraper.records_with_office_and_election_year(from_date=start_date, to_date=end_date, report_type='exp')
-print("Saving expenditures...")
 bucket.save([prefix, "ocf-expenditures.csv"], expenditures.csv)
