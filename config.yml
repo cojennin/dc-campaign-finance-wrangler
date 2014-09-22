@@ -1,0 +1,6 @@
+aws:
+  s3:
+    aws_key_id:
+    aws_secret_key:
+    ofc_csv_bucket_name:
+    ofc_json_bucket_name:
