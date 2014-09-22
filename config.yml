@@ -1,5 +1,5 @@
 aws:
   s3:
-    aws_key_id: AKIAI7NUJEN24KVYJMDQ
-    aws_secret_key: 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
+    aws_key_id:
+    aws_secret_key:
     bucket_name: ofc-contributions
